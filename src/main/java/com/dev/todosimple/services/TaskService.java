@@ -32,6 +32,10 @@ public class TaskService {
         return this.taskRepository.findAll();
     }
 
+    public List<Task> findAllByUserId(Long userId) {
+       return this.taskRepository.findByUser_Id(userId);
+    }
+
     @Transactional
     public Task create(Task obj) {
         User user = this.userService.findById(obj.getUser().getId());
