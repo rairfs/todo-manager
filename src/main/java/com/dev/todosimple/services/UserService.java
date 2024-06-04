@@ -1,22 +1,29 @@
 package com.dev.todosimple.services;
 
 import com.dev.todosimple.models.User;
+import com.dev.todosimple.models.enums.ProfileEnum;
 import com.dev.todosimple.repositories.UserRepository;
 import com.dev.todosimple.services.exceptions.DataBindingViolationException;
 import com.dev.todosimple.services.exceptions.ObjectNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public User findById(Long id) {
@@ -33,6 +40,8 @@ public class UserService {
     @Transactional
     public User create(User obj) {
         obj.setId(null);
+        obj.setPassword(bCryptPasswordEncoder.encode(obj.getPassword()));
+        obj.setProfiles(Objects.requireNonNull(ProfileEnum.toEnum(ProfileEnum.USER.getCode())));
         obj = this.userRepository.save(obj);
         return obj;
     }
@@ -40,7 +49,7 @@ public class UserService {
     @Transactional
     public User update(User obj) {
         User newObj = findById(obj.getId());
-        newObj.setPassword(obj.getPassword());
+        newObj.setPassword(bCryptPasswordEncoder.encode(obj.getPassword()));
         return this.userRepository.save(newObj);
     }
 
