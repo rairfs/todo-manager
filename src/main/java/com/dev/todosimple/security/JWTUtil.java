@@ -45,6 +45,14 @@ public class JWTUtil {
         return Keys.hmacShaKeyFor(this.secret.getBytes());
     }
 
+    public String getUsername(String token) {
+        Claims claims = getClaims(token);
+        if (Objects.nonNull(claims)) {
+            return claims.getSubject();
+        }
+        return null;
+    }
+
     private Claims getClaims(String token) {
         SecretKey key = getKeyBySecret();
         try {

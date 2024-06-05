@@ -3,7 +3,6 @@ package com.dev.todosimple.security;
 import com.dev.todosimple.exceptions.GlobalExceptionHandler;
 import com.dev.todosimple.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -41,8 +41,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             );
 
             return this.authenticationManager.authenticate(authToken);
-        } catch (Exception e) {
-            throw new RuntimeException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

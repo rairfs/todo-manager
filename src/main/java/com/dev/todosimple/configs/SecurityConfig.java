@@ -1,6 +1,7 @@
 package com.dev.todosimple.configs;
 
 import com.dev.todosimple.security.JWTAuthenticationFilter;
+import com.dev.todosimple.security.JWTAuthorizationFilter;
 import com.dev.todosimple.security.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,6 +71,7 @@ public class SecurityConfig {
         http.authenticationManager(authenticationManager);
 
         http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil, this.userDetailsService));
 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
