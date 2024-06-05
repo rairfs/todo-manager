@@ -118,8 +118,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
                 request);
     }
 
-
-
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<Object> handleAccessDeniedException(
@@ -141,6 +139,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
         return buildErrorResponse(
                 authorizationException,
                 HttpStatus.FORBIDDEN,
+                request);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<Object> handleAuthenticationException(
+            AuthenticationException authorizationException,
+            WebRequest request) {
+        log.error("Authentication error ", authorizationException);
+        return buildErrorResponse(
+                authorizationException,
+                HttpStatus.UNAUTHORIZED,
                 request);
     }
 
