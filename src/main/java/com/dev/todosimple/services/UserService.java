@@ -1,12 +1,15 @@
 package com.dev.todosimple.services;
 
 import com.dev.todosimple.models.User;
+import com.dev.todosimple.models.dto.UserCreateDTO;
+import com.dev.todosimple.models.dto.UserUpdateDTO;
 import com.dev.todosimple.models.enums.ProfileEnum;
 import com.dev.todosimple.repositories.UserRepository;
 import com.dev.todosimple.security.UserSpringSecurity;
 import com.dev.todosimple.services.exceptions.AuthorizationException;
 import com.dev.todosimple.services.exceptions.DataBindingViolationException;
 import com.dev.todosimple.services.exceptions.ObjectNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,9 @@ public class UserService {
     }
 
     public List<User> findAll() {
+        UserSpringSecurity userSpringSecurity = authenticated();
+        if (!Objects.nonNull(userSpringSecurity) || !userSpringSecurity.hasHole(ProfileEnum.ADMIN)) throw new AuthorizationException("Acesso negado!");
+
         return this.userRepository.findAll();
     }
 
@@ -72,5 +78,19 @@ public class UserService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public User fromDTO(@Valid UserCreateDTO obj) {
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+
+    public User fromDTO(@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
     }
 }

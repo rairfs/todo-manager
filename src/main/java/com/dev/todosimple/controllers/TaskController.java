@@ -1,6 +1,8 @@
 package com.dev.todosimple.controllers;
 
 import com.dev.todosimple.models.Task;
+import com.dev.todosimple.models.dto.TaskFindDTO;
+import com.dev.todosimple.models.projection.TaskProjection;
 import com.dev.todosimple.services.TaskService;
 import com.dev.todosimple.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +28,15 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> findById(@PathVariable Long id) {
+    public ResponseEntity<TaskFindDTO> findById(@PathVariable Long id) {
         Task obj = this.taskService.findById(id);
-        return ResponseEntity.ok().body(obj);
+        TaskFindDTO dto = this.taskService.toFindDTO(obj);
+        return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
-        this.userService.findById(userId);
-        List<Task> objs = this.taskService.findAllByUserId(userId);
+    @GetMapping("/user")
+    public ResponseEntity<List<TaskProjection>> findAllByUser() {
+        List<TaskProjection> objs = this.taskService.findAllByUser();
         return ResponseEntity.ok().body(objs);
     }
 

@@ -1,9 +1,9 @@
 package com.dev.todosimple.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 import java.util.Objects;
 
@@ -22,8 +22,7 @@ public class Task {
     private User user;
 
     @Column(name = "description", length = 255, nullable = false)
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(min = 1, max = 255)
     private String description;
 
